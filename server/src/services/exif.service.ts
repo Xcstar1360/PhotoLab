@@ -1,5 +1,5 @@
 import exifr from 'exifr';
-import { ExifData } from '../types';
+import { ExifData } from '@photolab/shared/types';
 
 export class ExifService {
   async extractExif(imagePath: string): Promise<ExifData> {

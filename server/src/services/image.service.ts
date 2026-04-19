@@ -1,8 +1,7 @@
 import sharp from 'sharp';
 import path from 'path';
-import fs from 'fs';
 import { ExifService } from './exif.service';
-import { WatermarkOptions, BorderOptions, ProcessingOptions, ProcessingResult, ExifData } from '../types';
+import { WatermarkOptions, BorderOptions, ProcessingOptions, ProcessingResult, ExifData } from '@photolab/shared/types';
 
 export class ImageService {
   private exifService = new ExifService();

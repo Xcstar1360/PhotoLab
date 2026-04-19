@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import { imageService } from '../services/image.service';
 import { exifService } from '../services/exif.service';
-import { ProcessingOptions } from '../types';
+import { ProcessingOptions } from '@photolab/shared/types';
 
 const router = Router();
 

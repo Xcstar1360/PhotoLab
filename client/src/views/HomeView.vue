@@ -7,7 +7,7 @@ import BorderPanel from '../components/BorderPanel.vue'
 import ExifInfo from '../components/ExifInfo.vue'
 import ActionButtons from '../components/ActionButtons.vue'
 import { usePhotoApi } from '../composables/usePhotoApi'
-import type { WatermarkOptions, BorderOptions, ExifData } from '../types'
+import type { WatermarkOptions, BorderOptions, ExifData } from '@photolab/shared/types'
 
 const { uploadPhoto, processPhoto, downloadResult } = usePhotoApi()
 
@@ -48,11 +48,21 @@ async function handleFileSelected(file: File) {
 }
 
 async function handleProcess() {
-  if (!uploadedFile.value) return
+  if (!uploadedFile.value) {
+    console.log('handleProcess: no uploadedFile')
+    return
+  }
+
+  console.log('handleProcess: calling processPhoto with', {
+    file: uploadedFile.value.name,
+    watermark: watermark.value,
+    border: border.value
+  })
 
   isProcessing.value = true
   try {
     const result = await processPhoto(uploadedFile.value, watermark.value, border.value)
+    console.log('handleProcess: result', result)
     if (result.success && result.outputPath) {
       processedUrl.value = result.outputPath
       showDownload.value = true
@@ -63,6 +73,7 @@ async function handleProcess() {
       alert('处理失败: ' + result.error)
     }
   } catch (err) {
+    console.error('handleProcess: error', err)
     alert('处理失败: ' + (err as Error).message)
   } finally {
     isProcessing.value = false

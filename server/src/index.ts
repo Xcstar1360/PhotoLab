@@ -4,14 +4,13 @@ import path from 'path';
 import photoRoutes from './routes/photo.routes';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.use('/api/photo', photoRoutes);
 

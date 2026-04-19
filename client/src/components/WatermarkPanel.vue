@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { WatermarkOptions } from '../types'
+import type { WatermarkOptions } from '@photolab/shared/types'
 
 const props = defineProps<{
   modelValue: WatermarkOptions

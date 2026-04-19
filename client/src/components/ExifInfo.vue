@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ExifData } from '../types'
+import type { ExifData } from '@photolab/shared/types'
 
 defineProps<{
   exif: ExifData | null

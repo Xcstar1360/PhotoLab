@@ -2,39 +2,23 @@
   "name": "photolab",
   "version": "1.0.0",
   "description": "Photo processing tool with watermark and border features",
-  "main": "dist/index.js",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "client",
+    "server"
+  ],
   "scripts": {
-    "build": "tsc",
-    "build:frontend": "vite build",
-    "start": "node dist/index.js",
-    "dev": "tsx src/index.ts",
-    "dev:frontend": "vite",
-    "dev:all": "npm run dev & npm run dev:frontend"
+    "dev": "npm run dev --workspace=@photolab/server",
+    "dev:frontend": "npm run dev --workspace=@photolab/client",
+    "dev:all": "npm run dev --workspace=@photolab/server & npm run dev --workspace=@photolab/client",
+    "build": "npm run build --workspace=@photolab/client && npm run build --workspace=@photolab/server",
+    "start": "npm run start --workspace=@photolab/server"
   },
   "keywords": [
     "photo",
     "watermark",
     "image-processing"
   ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/multer": "^2.1.0",
-    "@types/node": "^25.6.0",
-    "@vitejs/plugin-vue": "^6.0.6",
-    "cors": "^2.8.6",
-    "exifr": "^7.1.3",
-    "express": "^5.2.1",
-    "multer": "^2.1.1",
-    "sharp": "^0.34.5",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.8",
-    "vue": "^3.5.32"
-  },
-  "devDependencies": {
-    "vue-tsc": "^3.2.6"
-  }
+  "license": "ISC"
 }

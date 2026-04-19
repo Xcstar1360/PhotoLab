@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { BorderOptions } from '../types'
+import type { BorderOptions } from '@photolab/shared/types'
 
 const props = defineProps<{
   modelValue: BorderOptions

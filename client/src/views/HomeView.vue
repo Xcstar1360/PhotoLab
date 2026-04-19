@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import DropZone from '../components/DropZone.vue'
 import ImagePreview from '../components/ImagePreview.vue'
 import WatermarkPanel from '../components/WatermarkPanel.vue'
@@ -10,6 +10,25 @@ import { usePhotoApi } from '../composables/usePhotoApi'
 import type { WatermarkOptions, BorderOptions, ExifData } from '@photolab/shared/types'
 
 const { uploadPhoto, processPhoto, downloadResult } = usePhotoApi()
+
+const isDark = ref(true)
+
+onMounted(() => {
+  const saved = localStorage.getItem('theme')
+  if (saved) {
+    isDark.value = saved === 'dark'
+  }
+  applyTheme()
+})
+
+watch(isDark, () => {
+  applyTheme()
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+})
+
+function applyTheme() {
+  document.body.classList.toggle('light-theme', !isDark.value)
+}
 
 const uploadedFile = ref<File | null>(null)
 const originalUrl = ref('')
@@ -94,6 +113,9 @@ function handleDownload() {
         <span class="logo-icon">◆</span>
         <span class="logo-text">PhotoLab</span>
       </div>
+      <button class="theme-btn" @click="isDark = !isDark" :title="isDark ? '切换到浅色模式' : '切换到深色模式'">
+        <span class="theme-icon">{{ isDark ? '☀️' : '🌙' }}</span>
+      </button>
     </header>
 
     <main class="app-main">

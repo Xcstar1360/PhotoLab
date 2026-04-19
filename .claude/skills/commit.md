@@ -1,4 +1,7 @@
-# Skill: 提交代码
+---
+name: commit
+description: 提交代码并更新 ARCHITECTURE.md
+---
 
 当用户说"提交"、"帮我提交"、"commit"或类似表达时，执行以下流程：
 

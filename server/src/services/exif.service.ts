@@ -9,7 +9,7 @@ export class ExifService {
           'Make', 'Model', 'LensModel', 'SerialNumber',
           'ISO', 'FNumber', 'ExposureTime', 'FocalLength', 'Flash',
           'GPSLatitude', 'GPSLongitude', 'GPSAltitude',
-          'DateTimeOriginal', 'ImageWidth', 'ImageHeight', 'Orientation'
+          'DateTimeOriginal', 'ExifImageWidth', 'ExifImageHeight', 'PixelXDimension', 'PixelYDimension', 'Orientation'
         ]
       });
 
@@ -49,8 +49,10 @@ export class ExifService {
           : String(exif.DateTimeOriginal);
       }
 
-      if (exif.ImageWidth) result.imageWidth = exif.ImageWidth;
-      if (exif.ImageHeight) result.imageHeight = exif.ImageHeight;
+      if (exif.ExifImageWidth) result.imageWidth = exif.ExifImageWidth;
+      else if (exif.PixelXDimension) result.imageWidth = exif.PixelXDimension;
+      if (exif.ExifImageHeight) result.imageHeight = exif.ExifImageHeight;
+      else if (exif.PixelYDimension) result.imageHeight = exif.PixelYDimension;
       if (exif.Orientation) result.orientation = exif.Orientation;
 
       return result;

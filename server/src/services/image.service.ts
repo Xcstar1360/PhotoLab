@@ -22,19 +22,26 @@ export class ImageService {
         image = await this.applyBorder(image, metadata.width || 0, metadata.height || 0, options.border);
       }
 
-      if (options.watermark) {
+      if (options.watermark && options.watermark.text) {
         image = await this.applyWatermark(image, metadata.width || 0, metadata.height || 0, options.watermark);
       }
 
       await image.jpeg({ quality: 90 }).toFile(outputPath);
 
       const exif = await this.exifService.extractExif(inputPath);
-
-      return {
+      const result: ProcessingResult = {
         success: true,
         outputPath: `/uploads/${fileName}`,
-        exif
+        exif: {
+          imageWidth: metadata.width,
+          imageHeight: metadata.height
+        }
       };
+      if (exif) {
+        result.exif = { ...exif, imageWidth: metadata.width, imageHeight: metadata.height };
+      }
+
+      return result;
     } catch (error) {
       console.error('Image processing error:', error);
       return {
@@ -55,28 +62,36 @@ export class ImageService {
     const opacity = options.opacity || 0.8;
     const padding = 20;
 
+    const svgWidth = width;
+    const svgHeight = height;
+    const actualFontSize = Math.round(fontSize * Math.min(width, height) / 500);
+    const actualPadding = Math.round(padding * Math.min(width, height) / 500);
+
     const svgText = `
-      <svg width="${width}" height="${height}">
+      <svg width="${svgWidth}" height="${svgHeight}">
         <style>
           .watermark {
             fill: ${color};
             fill-opacity: ${opacity};
-            font-size: ${fontSize}px;
+            font-size: ${actualFontSize}px;
             font-family: Arial, sans-serif;
             font-weight: bold;
           }
         </style>
         <text
           class="watermark"
-          x="${this.getXPosition(width, fontSize, padding, options.position)}"
-          y="${this.getYPosition(height, fontSize, padding, options.position)}"
+          x="${this.getXPosition(svgWidth, actualFontSize, actualPadding, options.position)}"
+          y="${this.getYPosition(svgHeight, actualFontSize, actualPadding, options.position)}"
           text-anchor="${this.getTextAnchor(options.position)}"
         >${this.escapeXml(options.text)}</text>
       </svg>
     `;
 
+    const svgBuffer = Buffer.from(svgText);
+    const pngBuffer = await sharp(svgBuffer).png().toBuffer();
+
     return image.composite([{
-      input: Buffer.from(svgText),
+      input: pngBuffer,
       top: 0,
       left: 0
     }]);
@@ -128,7 +143,8 @@ export class ImageService {
   }
 
   private escapeXml(text: string): string {
-    return text
+    if (!text) return '';
+    return String(text)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -193,8 +209,11 @@ export class ImageService {
       </svg>
     `;
 
+    const svgBuffer = Buffer.from(svg);
+    const pngBuffer = await sharp(svgBuffer).png().toBuffer();
+
     return image.composite([{
-      input: Buffer.from(svg),
+      input: pngBuffer,
       top: 0,
       left: 0
     }]);

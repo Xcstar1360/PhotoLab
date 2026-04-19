@@ -1,0 +1,83 @@
+:root {
+  --color-bg: #1a1a2e;
+  --color-card: #16213e;
+  --color-card-dark: #0f0f23;
+  --color-primary: #00d4ff;
+  --color-primary-hover: #00a8cc;
+  --color-text: #eee;
+  --color-text-muted: #888;
+  --radius: 12px;
+  --radius-sm: 6px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--color-primary);
+}
+
+h3 {
+  color: var(--color-primary);
+  margin-bottom: 15px;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background: var(--color-primary);
+  color: var(--color-bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+input, select {
+  background: var(--color-card-dark);
+  border: 1px solid #333;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 150px;
+}

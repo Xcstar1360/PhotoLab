@@ -7,17 +7,10 @@
       "Bash(npx vite *)",
       "Bash(npm run *)",
       "Bash(taskkill /F /IM node.exe)",
-      "Bash(curl -s http://localhost:3001/health)",
-      "Bash(taskkill /F /PID 34068 /PID 8224 /PID 17840 /PID 15928 /PID 16284 /PID 13708 /PID 20584 /PID 28668 sleep 2 netstat -ano)",
-      "Bash(curl -s http://localhost:5179/api/photo/upload -X POST -F \"image=@server/uploads/upload_1776586141846.JPG\")",
-      "Bash(curl -X POST http://localhost:5179/api/photo/process -F image=@server/uploads/upload_1776586141846.JPG -F 'watermark={\"text\":\"Test\",\"position\":\"bottom-right\",\"fontSize\":24,\"color\":\"#ffffff\",\"opacity\":0.8}' -F 'border={\"type\":\"color-bar\",\"color\":\"#1a1a1a\",\"barWidth\":60}')",
-      "Bash(taskkill //F //IM node.exe sleep 3 netstat -ano)",
-      "Bash(curl -s http://localhost:5173/src/views/HomeView.vue)",
-      "Bash(curl -s http://localhost:5173/src/main.ts)",
-      "Bash(curl -s http://localhost:5173/src/App.vue)",
-      "Bash(curl -s http://localhost:5173/src/components/ActionButtons.vue)",
-      "Bash(curl -s http://localhost:5173/src/composables/usePhotoApi.ts)",
-      "Bash(git add *)"
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(tasklist)"
     ]
   }
 }

@@ -4,6 +4,7 @@
   "main": "./types/index.ts",
   "types": "./types/index.ts",
   "exports": {
-    ".": "./types/index.ts"
+    ".": "./types/index.ts",
+    "./types": "./types/index.ts"
   }
 }

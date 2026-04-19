@@ -3,9 +3,13 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "types": ["node"]
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "types": ["node"],
+    "paths": {
+      "@photolab/shared": ["../shared/types/index.ts"],
+      "@photolab/shared/*": ["../shared/types/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

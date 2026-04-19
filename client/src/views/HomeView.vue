@@ -88,23 +88,54 @@ function handleDownload() {
 </script>
 
 <template>
-  <div class="container">
-    <h1>PhotoLab</h1>
+  <div class="app-layout">
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">◆</span>
+        <span class="logo-text">PhotoLab</span>
+      </div>
+    </header>
 
-    <div class="card">
-      <DropZone @file-selected="handleFileSelected" />
-      <ImagePreview v-if="originalUrl" :original-url="originalUrl" :processed-url="processedUrl" />
-    </div>
+    <main class="app-main">
+      <!-- Left Panel: Parameters -->
+      <aside class="panel panel-left">
+        <div class="panel-header">
+          <h2>参数设置</h2>
+        </div>
+        <div class="panel-content">
+          <WatermarkPanel v-model="watermark" />
+          <BorderPanel v-model="border" />
+        </div>
+        <div class="panel-footer">
+          <ActionButtons :is-processing="isProcessing" :show-download="showDownload" @process="handleProcess" @download="handleDownload" />
+        </div>
+      </aside>
 
-    <div class="card">
-      <WatermarkPanel v-model="watermark" />
-      <BorderPanel v-model="border" />
-      <ActionButtons :is-processing="isProcessing" :show-download="showDownload" @process="handleProcess" @download="handleDownload" />
-    </div>
+      <!-- Center Panel: Image Display -->
+      <section class="panel panel-center">
+        <div class="panel-header">
+          <h2>图片预览</h2>
+        </div>
+        <div class="panel-content">
+          <DropZone v-if="!originalUrl" @file-selected="handleFileSelected" />
+          <ImagePreview v-else :original-url="originalUrl" :processed-url="processedUrl" @file-selected="handleFileSelected" />
+        </div>
+      </section>
 
-    <div class="card" v-if="exif">
-      <h3>拍摄设备信息</h3>
-      <ExifInfo :exif="exif" />
-    </div>
+      <!-- Right Panel: Capture Info -->
+      <aside class="panel panel-right">
+        <div class="panel-header">
+          <h2>拍摄信息</h2>
+        </div>
+        <div class="panel-content">
+          <ExifInfo :exif="exif" />
+          <div v-if="!exif" class="empty-state">
+            <div class="empty-icon">📷</div>
+            <p>暂无拍摄信息</p>
+            <p class="empty-hint">上传照片后自动解析</p>
+          </div>
+        </div>
+      </aside>
+    </main>
   </div>
 </template>

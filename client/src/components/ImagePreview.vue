@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const emit = defineEmits<{
+  fileSelected: [file: File]
+}>()
+
 defineProps<{
   originalUrl: string
   processedUrl: string
@@ -6,40 +10,25 @@ defineProps<{
 </script>
 
 <template>
-  <div class="preview-container">
-    <div class="preview-box">
-      <h3>原图</h3>
-      <img :src="originalUrl" alt="Original">
+  <div class="preview-wrapper">
+    <div class="preview-container">
+      <div class="preview-box">
+        <div class="preview-label">原图</div>
+        <div class="preview-image-wrap">
+          <img :src="originalUrl" alt="Original">
+        </div>
+      </div>
+      <div class="preview-box" v-if="processedUrl">
+        <div class="preview-label">处理后</div>
+        <div class="preview-image-wrap">
+          <img :src="processedUrl" alt="Processed">
+        </div>
+      </div>
     </div>
-    <div class="preview-box">
-      <h3>处理后</h3>
-      <img :src="processedUrl" alt="Processed">
-    </div>
+    <button class="btn-change" @click="emit('fileSelected', null as any)">更换图片</button>
   </div>
 </template>
 
 <style scoped>
-.preview-container {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.preview-box {
-  flex: 1;
-  min-width: 280px;
-  background: var(--color-card-dark);
-  border-radius: 8px;
-  padding: 15px;
-}
-
-.preview-box img {
-  width: 100%;
-  border-radius: 4px;
-}
-
-.preview-box h3 {
-  margin-bottom: 10px;
-}
+/* Styles moved to main.css */
 </style>

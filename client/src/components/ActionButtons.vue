@@ -20,9 +20,5 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-.btn-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
+/* Styles moved to main.css */
 </style>

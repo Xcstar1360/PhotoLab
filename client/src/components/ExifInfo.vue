@@ -54,19 +54,5 @@ function formatExif(exif: ExifData): Array<{ label: string; value: string }> {
 </template>
 
 <style scoped>
-.exif-info {
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.exif-info dt {
-  color: var(--color-text-muted);
-  float: left;
-  width: 100px;
-}
-
-.exif-info dd {
-  margin-left: 100px;
-  color: var(--color-primary);
-}
+/* Styles moved to main.css */
 </style>

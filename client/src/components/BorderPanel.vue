@@ -58,19 +58,5 @@ function handleTypeChange(e: Event) {
 </template>
 
 <style scoped>
-.option-group {
-  margin-bottom: 20px;
-}
-
-.option-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.option-row label {
-  min-width: 80px;
-}
+/* Component-specific styles - shared styles in main.css */
 </style>

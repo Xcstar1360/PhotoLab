@@ -47,21 +47,5 @@ function handleFileChange(e: Event) {
 </template>
 
 <style scoped>
-.drop-zone {
-  border: 2px dashed var(--color-primary);
-  border-radius: 8px;
-  padding: 40px;
-  text-align: center;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.drop-zone:hover,
-.drop-zone.dragover {
-  background: rgba(0, 212, 255, 0.1);
-}
-
-.drop-zone input {
-  display: none;
-}
+/* Styles moved to main.css */
 </style>

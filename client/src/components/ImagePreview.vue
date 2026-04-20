@@ -46,9 +46,11 @@ defineProps<{
 .preview-box {
   flex: 1;
   min-width: 100%;
+  display: flex;
+  flex-direction: column;
   background: var(--color-panel);
-  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: border-color 0.3s;
 
@@ -58,6 +60,7 @@ defineProps<{
 }
 
 .preview-label {
+  flex-shrink: 0;
   padding: 10px 14px;
   font-size: 12px;
   font-weight: 600;
@@ -69,17 +72,18 @@ defineProps<{
 }
 
 .preview-image-wrap {
+  flex: 1;
   padding: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
   background: rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 
   img {
     max-width: 100%;
-    max-height: 70vh;
-    border-radius: 6px;
+    max-height: 100%;
+    object-fit: contain;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
 }

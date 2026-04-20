@@ -1,4 +1,4 @@
-import type { WatermarkOptions, BorderOptions, ExifData, ProcessingResult } from '@photolab/shared/types'
+import type { WatermarkOptions, BorderOptions, PhotoInfoOptions, ExifData, ProcessingResult } from '@photolab/shared/types'
 
 export interface UploadResult {
   success: boolean
@@ -20,13 +20,17 @@ export function usePhotoApi() {
   async function processPhoto(
     file: File,
     watermark: WatermarkOptions,
-    border: BorderOptions
+    border: BorderOptions,
+    photoInfo?: PhotoInfoOptions
   ): Promise<ProcessingResult> {
-    console.log('processPhoto: sending request', { fileName: file.name, watermark, border })
+    console.log('processPhoto: sending request', { fileName: file.name, watermark, border, photoInfo })
     const formData = new FormData()
     formData.append('image', file)
     formData.append('watermark', JSON.stringify(watermark))
     formData.append('border', JSON.stringify(border))
+    if (photoInfo) {
+      formData.append('photoInfo', JSON.stringify(photoInfo))
+    }
 
     const res = await fetch('/api/photo/process', { method: 'POST', body: formData })
     console.log('processPhoto: response status', res.status)

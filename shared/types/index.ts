@@ -39,9 +39,18 @@ export interface BorderOptions {
   dominantColor?: boolean;
 }
 
+export interface PhotoInfoOptions {
+  enabled: boolean;
+  style: 'bottom-bar';
+  height?: number;
+  textColor?: string;
+  bgColor?: string;
+}
+
 export interface ProcessingOptions {
   watermark?: WatermarkOptions;
   border?: BorderOptions;
+  photoInfo?: PhotoInfoOptions;
 }
 
 export interface ProcessingResult {

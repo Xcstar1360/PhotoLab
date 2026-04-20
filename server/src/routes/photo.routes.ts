@@ -67,7 +67,8 @@ router.post('/process', upload.single('image'), async (req: MulterRequest, res: 
 
     const options: ProcessingOptions = {
       watermark: req.body.watermark ? JSON.parse(req.body.watermark) : undefined,
-      border: req.body.border ? JSON.parse(req.body.border) : undefined
+      border: req.body.border ? JSON.parse(req.body.border) : undefined,
+      photoInfo: req.body.photoInfo ? JSON.parse(req.body.photoInfo) : undefined
     };
 
     const result = await imageService.processImage(req.file.path, options);

@@ -39,6 +39,24 @@ export function usePhotoApi() {
     return data
   }
 
+  async function processExistingPhoto(
+    originalPath: string,
+    watermark: WatermarkOptions,
+    border: BorderOptions,
+    capture?: CaptureOptions
+  ): Promise<ProcessingResult> {
+    console.log('processExistingPhoto: sending request', { originalPath, watermark, border, capture })
+    const res = await fetch('/api/photo/process-existing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ originalPath, watermark, border, capture })
+    })
+    console.log('processExistingPhoto: response status', res.status)
+    const data: ProcessingResult = await res.json()
+    console.log('processExistingPhoto: response data', data)
+    return data
+  }
+
   function downloadResult(url: string) {
     const a = document.createElement('a')
     a.href = url
@@ -49,6 +67,7 @@ export function usePhotoApi() {
   return {
     uploadPhoto,
     processPhoto,
+    processExistingPhoto,
     downloadResult
   }
 }

@@ -84,6 +84,36 @@ router.post('/process', upload.single('image'), async (req: MulterRequest, res: 
   }
 });
 
+router.post('/process-existing', async (req: Request, res: Response) => {
+  try {
+    const { originalPath } = req.body;
+    if (!originalPath) {
+      res.status(400).json({ error: 'Missing originalPath' });
+      return;
+    }
+
+    // Convert URL path (/uploads/xxx.jpg) to filesystem path
+    const filePath = path.join(process.cwd(), originalPath);
+
+    const options: ProcessingOptions = {
+      watermark: req.body.watermark || undefined,
+      border: req.body.border || undefined,
+      capture: req.body.capture || undefined
+    };
+
+    const result = await imageService.processExistingImage(filePath, options);
+
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (error) {
+    console.error('Processing error:', error);
+    res.status(500).json({ error: 'Processing failed' });
+  }
+});
+
 router.get('/exif/:filename', async (req: Request, res: Response) => {
   try {
     const filename = req.params.filename as string;

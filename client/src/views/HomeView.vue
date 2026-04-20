@@ -10,7 +10,7 @@ import ActionButtons from '../components/ActionButtons.vue'
 import { usePhotoApi } from '../composables/usePhotoApi'
 import type { WatermarkOptions, BorderOptions, CaptureOptions, ExifData } from '@photolab/shared/types'
 
-const { uploadPhoto, processPhoto, downloadResult } = usePhotoApi()
+const { uploadPhoto, processPhoto, processExistingPhoto, downloadResult } = usePhotoApi()
 
 const isDark = ref(true)
 
@@ -89,10 +89,15 @@ async function handleProcess() {
 
   isProcessing.value = true
   try {
-    const result = await processPhoto(uploadedFile.value, watermark.value, border.value, capture.value)
+    let result
+    if (originalUrl.value) {
+      result = await processExistingPhoto(originalUrl.value, watermark.value, border.value, capture.value)
+    } else {
+      result = await processPhoto(uploadedFile.value, watermark.value, border.value, capture.value)
+    }
     console.log('handleProcess: result', result)
     if (result.success && result.outputPath) {
-      processedUrl.value = result.outputPath
+      processedUrl.value = result.outputPath + '?t=' + Date.now()
       showDownload.value = true
       if (result.exif) {
         exif.value = result.exif

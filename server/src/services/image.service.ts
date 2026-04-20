@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import sharp from "sharp";
 import path from "path";
 import { ExifService } from "./exif.service";
@@ -10,6 +11,67 @@ export class ImageService {
   private exifService = new ExifService();
   private outputDir = path.join(process.cwd(), "uploads");
 
+  private async applyProcessing(
+    image: sharp.Sharp,
+    inputPath: string,
+    outputPath: string,
+    options: ProcessingOptions,
+  ): Promise<ProcessingResult> {
+    const metadata = await image.metadata();
+    const width = metadata.width || 0;
+    const height = metadata.height || 0;
+
+    const exif = await this.exifService.extractExif(inputPath);
+
+    if (options.border) {
+      image = await borderService.applyBorder(
+        image,
+        width,
+        height,
+        options.border,
+      );
+    }
+
+    if (options.watermark && options.watermark.text) {
+      image = await watermarkService.applyWatermark(
+        image,
+        width,
+        height,
+        options.watermark,
+      );
+    }
+
+    if (options.capture && options.capture.enabled) {
+      image = await captureService.applyCapture(
+        image,
+        width,
+        height,
+        options.capture,
+        exif,
+      );
+    }
+
+    await image.jpeg({ quality: 90 }).toFile(outputPath);
+
+    const result: ProcessingResult = {
+      success: true,
+      outputPath: `/uploads/${path.basename(outputPath)}`,
+      exif: {
+        imageWidth: metadata.width,
+        imageHeight: metadata.height,
+      },
+    };
+    if (exif) {
+      result.exif = {
+        ...exif,
+        imageWidth: metadata.width,
+        imageHeight: metadata.height,
+      };
+    }
+
+    return result;
+  }
+
   async processImage(
     inputPath: string,
     options: ProcessingOptions,
@@ -17,61 +79,9 @@ export class ImageService {
     try {
       const fileName = `processed_${Date.now()}.jpg`;
       const outputPath = path.join(this.outputDir, fileName);
+      const image = sharp(inputPath);
 
-      let image = sharp(inputPath);
-      const metadata = await image.metadata();
-      const width = metadata.width || 0;
-      const height = metadata.height || 0;
-
-      const exif = await this.exifService.extractExif(inputPath);
-
-      if (options.border) {
-        image = await borderService.applyBorder(
-          image,
-          width,
-          height,
-          options.border,
-        );
-      }
-
-      if (options.watermark && options.watermark.text) {
-        image = await watermarkService.applyWatermark(
-          image,
-          width,
-          height,
-          options.watermark,
-        );
-      }
-
-      if (options.capture && options.capture.enabled) {
-        image = await captureService.applyCapture(
-          image,
-          width,
-          height,
-          options.capture,
-          exif,
-        );
-      }
-
-      await image.jpeg({ quality: 90 }).toFile(outputPath);
-
-      const result: ProcessingResult = {
-        success: true,
-        outputPath: `/uploads/${fileName}`,
-        exif: {
-          imageWidth: metadata.width,
-          imageHeight: metadata.height,
-        },
-      };
-      if (exif) {
-        result.exif = {
-          ...exif,
-          imageWidth: metadata.width,
-          imageHeight: metadata.height,
-        };
-      }
-
-      return result;
+      return this.applyProcessing(image, inputPath, outputPath, options);
     } catch (error) {
       console.error("Image processing error:", error);
       return {
@@ -79,6 +89,30 @@ export class ImageService {
         error: error instanceof Error ? error.message : "Unknown error",
       };
     }
+  }
+
+  async processExistingImage(
+    inputPath: string,
+    options: ProcessingOptions,
+  ): Promise<ProcessingResult> {
+    try {
+      const hash = this.generateParamsHash(inputPath);
+      const fileName = `processed_${hash}.jpg`;
+      const outputPath = path.join(this.outputDir, fileName);
+      const image = sharp(inputPath);
+
+      return this.applyProcessing(image, inputPath, outputPath, options);
+    } catch (error) {
+      console.error("Image processing error:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  private generateParamsHash(inputPath: string): string {
+    return crypto.createHash("md5").update(inputPath).digest("hex").substring(0, 12);
   }
 
   async extractDominantColor(imagePath: string): Promise<string> {

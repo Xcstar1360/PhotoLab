@@ -53,6 +53,27 @@ function formatExif(exif: ExifData): Array<{ label: string; value: string }> {
   </div>
 </template>
 
-<style scoped>
-/* Styles moved to main.css */
+<style lang="scss" scoped>
+.exif-info {
+  font-size: 13px;
+  line-height: 1.8;
+
+  dt {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  dd {
+    color: var(--color-text);
+    padding: 6px 0 12px 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 4px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
 </style>

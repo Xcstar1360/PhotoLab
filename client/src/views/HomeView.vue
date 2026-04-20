@@ -161,3 +161,221 @@ function handleDownload() {
     </main>
   </div>
 </template>
+
+<style lang="scss" scoped>
+// App Layout
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background: rgba(13, 13, 20, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 24px;
+  color: var(--color-primary);
+  text-shadow: var(--shadow-glow);
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+.theme-btn {
+  width: 44px;
+  height: 44px;
+  background: var(--color-card-dark);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: var(--color-panel-hover);
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--color-primary-glow);
+  }
+}
+
+.theme-icon {
+  font-size: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: 300px 1fr 280px;
+  gap: 20px;
+  padding: 20px;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+// Panel Base
+.panel {
+  background: var(--color-panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    border-color: rgba(0, 212, 255, 0.15);
+  }
+}
+
+.panel-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.2);
+
+  h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-text-muted);
+  }
+}
+
+.panel-content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.panel-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+// Left Panel - Parameters
+.panel-left .panel-header h2::before {
+  content: '⚙ ';
+}
+
+// Center Panel - Preview
+.panel-center {
+  background: var(--color-card-dark);
+
+  .panel-header {
+    background: rgba(0, 212, 255, 0.05);
+    border-bottom-color: rgba(0, 212, 255, 0.1);
+
+    h2 {
+      color: var(--color-primary);
+
+      &::before {
+        content: '◈ ';
+      }
+    }
+  }
+}
+
+// Right Panel - Info
+.panel-right .panel-header h2::before {
+  content: 'ℹ ';
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-muted);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-hint {
+  font-size: 12px;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .app-main {
+    grid-template-columns: 260px 1fr 240px;
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .panel-left {
+    order: 2;
+  }
+
+  .panel-center {
+    order: 1;
+  }
+
+  .panel-right {
+    order: 3;
+  }
+}
+
+// Light Theme Overrides
+body.light-theme .app-header {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom-color: var(--color-border);
+}
+
+body.light-theme .theme-btn {
+  background: var(--color-panel);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.2);
+  }
+}
+
+body.light-theme .panel {
+  box-shadow: var(--shadow-panel);
+}
+</style>

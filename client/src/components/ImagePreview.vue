@@ -29,6 +29,76 @@ defineProps<{
   </div>
 </template>
 
-<style scoped>
-/* Styles moved to main.css */
+<style lang="scss" scoped>
+.preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.preview-box {
+  flex: 1;
+  min-width: 100%;
+  background: var(--color-panel);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: border-color 0.3s;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+.preview-label {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.preview-image-wrap {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: rgba(0, 0, 0, 0.2);
+
+  img {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.btn-change {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 16px;
+
+  &:hover {
+    background: var(--color-panel-hover);
+    color: var(--color-text);
+    border-color: var(--color-primary);
+  }
+}
 </style>

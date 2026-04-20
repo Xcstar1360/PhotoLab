@@ -46,6 +46,42 @@ function handleFileChange(e: Event) {
   </div>
 </template>
 
-<style scoped>
-/* Styles moved to main.css */
+<style lang="scss" scoped>
+.drop-zone {
+  border: 2px dashed rgba(0, 212, 255, 0.4);
+  border-radius: var(--radius);
+  padding: 60px 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: rgba(0, 212, 255, 0.02);
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  &:hover,
+  &.dragover {
+    background: rgba(0, 212, 255, 0.08);
+    border-color: var(--color-primary);
+    box-shadow: inset 0 0 30px var(--color-primary-glow);
+  }
+
+  p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  input {
+    display: none;
+  }
+
+  &::before {
+    content: '📁';
+    font-size: 48px;
+    opacity: 0.6;
+  }
+}
 </style>

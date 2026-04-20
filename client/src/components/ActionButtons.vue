@@ -19,6 +19,15 @@ const emit = defineEmits<{
   </div>
 </template>
 
-<style scoped>
-/* Styles moved to main.css */
+<style lang="scss" scoped>
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
 </style>

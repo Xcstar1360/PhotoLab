@@ -1,0 +1,41 @@
+// Theme variables
+:root {
+  --color-bg: #0d0d14;
+  --color-bg-gradient: linear-gradient(135deg, #0d0d14 0%, #1a1a2e 50%, #16213e 100%);
+  --color-panel: #13131f;
+  --color-panel-hover: #1a1a2a;
+  --color-card: #1e1e2e;
+  --color-card-dark: #12121a;
+  --color-primary: #00d4ff;
+  --color-primary-glow: rgba(0, 212, 255, 0.3);
+  --color-primary-hover: #00a8cc;
+  --color-accent: #ff6b9d;
+  --color-accent-glow: rgba(255, 107, 157, 0.3);
+  --color-text: #e8e8f0;
+  --color-text-muted: #6b6b8a;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--color-primary-glow);
+}
+
+// Light Theme
+body.light-theme {
+  --color-bg: #f0f2f5;
+  --color-bg-gradient: linear-gradient(135deg, #f0f2f5 0%, #e8eaed 50%, #dfe2e8 100%);
+  --color-panel: #ffffff;
+  --color-panel-hover: #f5f7fa;
+  --color-card: #ffffff;
+  --color-card-dark: #f0f2f5;
+  --color-primary: #0066cc;
+  --color-primary-glow: rgba(0, 102, 204, 0.2);
+  --color-primary-hover: #0052a3;
+  --color-accent: #e91e63;
+  --color-accent-glow: rgba(233, 30, 99, 0.2);
+  --color-text: #1a1a2e;
+  --color-text-muted: #6b7280;
+  --color-border: rgba(0, 0, 0, 0.1);
+  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 15px var(--color-primary-glow);
+}

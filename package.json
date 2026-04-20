@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "npm run dev --workspace=@photolab/server",
     "dev:frontend": "npm run dev --workspace=@photolab/client",
-    "dev:all": "npx concurrently \"npm run dev --workspace=@photolab/server\" \"npm run dev --workspace=@photolab/client\"",
+    "dev:all": "npx concurrently --raw -n server,client -c \"bgBlue.bold,bgGreen.bold\" \"npm run dev --workspace=@photolab/server\" \"npm run dev --workspace=@photolab/client\"",
     "build": "npm run build --workspace=@photolab/client && npm run build --workspace=@photolab/server",
     "start": "npm run start --workspace=@photolab/server"
   },

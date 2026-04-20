@@ -49,7 +49,7 @@ PhotoLab/
 │   │   │   ├── ExifInfo.vue   # EXIF 信息展示
 │   │   │   ├── WatermarkPanel.vue # 水印设置面板
 │   │   │   ├── BorderPanel.vue # 边框设置面板
-│   │   ├── PhotoInfoPanel.vue # 拍摄参数面板
+│   │   │   ├── PhotoInfoPanel.vue # 拍摄参数面板
 │   │   │   └── ActionButtons.vue # 操作按钮
 │   │   ├── composables/
 │   │   │   └── usePhotoApi.ts # API 调用封装
@@ -66,8 +66,14 @@ PhotoLab/
 │   │   ├── routes/
 │   │   │   └── photo.routes.ts # API 路由
 │   │   └── services/
+│   │       ├── image.service.ts # 图像处理入口
 │   │       ├── exif.service.ts # EXIF 提取
-│   │       └── image.service.ts # 图像处理
+│   │       ├── watermark/
+│   │       │   └── watermark.service.ts # 水印处理
+│   │       ├── border/
+│   │       │   └── border.service.ts # 边框处理
+│   │       └── capture/
+│   │           └── capture.service.ts # 拍摄参数水印
 │   ├── uploads/               # 上传文件目录
 │   ├── tsconfig.json
 │   └── package.json
@@ -130,13 +136,14 @@ npm run start
 - [x] 纯色边框（支持自定义颜色或主色调）
 - [x] 模糊边框
 - [x] 深色/浅色主题切换
-- [x] 拍摄参数水印（底部横幅样式）
+- [x] 拍摄参数水印（经典/徕卡/影院/宝丽来 四种风格）
 
 ## 更新日志
 
 | 日期 | 描述 |
 |------|------|
-| 2026-04-20 | 新增拍摄参数水印功能（底部横幅样式） |
+| 2026-04-20 | 重构服务端服务结构，拆分 image.service.ts |
+| 2026-04-20 | 新增拍摄参数水印功能（四种风格） |
 | 2026-04-20 | CSS 迁移到 SCSS 并拆分到各组件 |
 | 2026-04-19 | 新增深色/浅色主题切换功能 |
 | 2026-04-19 | 重构前端布局为左中右三栏结构 |

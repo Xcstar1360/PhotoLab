@@ -39,9 +39,9 @@ export interface BorderOptions {
   dominantColor?: boolean;
 }
 
-export interface PhotoInfoOptions {
+export interface CaptureOptions {
   enabled: boolean;
-  style: 'bottom-bar';
+  style: 'classic' | 'leica' | 'cinema' | 'polaroid';
   height?: number;
   textColor?: string;
   bgColor?: string;
@@ -50,7 +50,7 @@ export interface PhotoInfoOptions {
 export interface ProcessingOptions {
   watermark?: WatermarkOptions;
   border?: BorderOptions;
-  photoInfo?: PhotoInfoOptions;
+  capture?: CaptureOptions;
 }
 
 export interface ProcessingResult {

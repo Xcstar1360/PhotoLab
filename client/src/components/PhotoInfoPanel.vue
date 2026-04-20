@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import type { PhotoInfoOptions } from '@photolab/shared/types'
+import type { CaptureOptions } from '@photolab/shared/types'
 
 const props = defineProps<{
-  modelValue: PhotoInfoOptions
+  modelValue: CaptureOptions
 }>()
 
 const emit = defineEmits<{
-  'update:modelValue': [value: PhotoInfoOptions]
+  'update:modelValue': [value: CaptureOptions]
 }>()
 
 function toggleEnabled() {
   emit('update:modelValue', { ...props.modelValue, enabled: !props.modelValue.enabled })
+}
+
+function selectStyle(style: CaptureOptions['style']) {
+  emit('update:modelValue', { ...props.modelValue, style })
 }
 
 function updateHeight(e: Event) {
@@ -25,57 +29,216 @@ function updateTextColor(e: Event) {
 function updateBgColor(e: Event) {
   emit('update:modelValue', { ...props.modelValue, bgColor: (e.target as HTMLInputElement).value })
 }
+
+const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
+  { value: 'classic', label: '经典' },
+  { value: 'leica', label: '徕卡' },
+  { value: 'cinema', label: '影院' },
+  { value: 'polaroid', label: '宝丽来' },
+]
 </script>
 
 <template>
-  <div class="option-group">
+  <div class="option-group photo-info-group">
     <h3>拍摄参数</h3>
-    <div class="option-row">
-      <label>启用</label>
-      <input type="checkbox" :checked="modelValue.enabled" @change="toggleEnabled">
+
+    <div class="form-row">
+      <span class="form-label">启用</span>
+      <button class="toggle-switch" :class="{ active: modelValue.enabled }" @click="toggleEnabled">
+        <span class="toggle-knob"></span>
+      </button>
     </div>
-    <div class="option-row" v-if="modelValue.enabled">
-      <label>风格</label>
-      <select :value="modelValue.style">
-        <option value="bottom-bar">底部横幅</option>
-      </select>
-    </div>
-    <div class="option-row" v-if="modelValue.enabled">
-      <label>高度</label>
-      <input type="number" :value="modelValue.height || 80" @input="updateHeight" min="40" max="200">
-      <span>px</span>
-    </div>
-    <div class="option-row" v-if="modelValue.enabled">
-      <label>文字颜色</label>
-      <input type="color" :value="modelValue.textColor || '#333333'" @input="updateTextColor">
-    </div>
-    <div class="option-row" v-if="modelValue.enabled">
-      <label>背景色</label>
-      <input type="color" :value="modelValue.bgColor || '#FFFFFF'" @input="updateBgColor">
-    </div>
-    <div class="preview-box" v-if="modelValue.enabled">
-      <div class="preview-label">预览效果</div>
-      <div class="preview-content">
-        <div class="preview-image-placeholder">
+
+    <template v-if="modelValue.enabled">
+      <div class="form-row">
+        <span class="form-label">风格</span>
+        <div class="style-list">
+          <button
+            v-for="opt in styleOptions"
+            :key="opt.value"
+            class="style-item"
+            :class="{ selected: modelValue.style === opt.value }"
+            @click="selectStyle(opt.value)"
+          >
+            <span class="style-dot"></span>
+            <span>{{ opt.label }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <span class="form-label">高度</span>
+        <div class="input-group">
+          <input type="number" :value="modelValue.height || 80" @input="updateHeight" min="40" max="200">
+          <span class="unit">px</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <span class="form-label">文字</span>
+        <input type="color" :value="modelValue.textColor || '#333333'" @input="updateTextColor">
+      </div>
+
+      <div class="form-row">
+        <span class="form-label">背景</span>
+        <input type="color" :value="modelValue.bgColor || '#FFFFFF'" @input="updateBgColor">
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-header">预览效果</div>
+        <div class="preview-area">
           <div class="preview-text" :style="{ color: modelValue.textColor || '#333333', backgroundColor: modelValue.bgColor || '#FFFFFF' }">
-            SONY ILCE-6700 | 50mm f/1.8 | 1/250s | ISO 400 | 2023:11:17
+            <template v-if="modelValue.style === 'classic'">SONY ILCE-6700</template>
+            <template v-else-if="modelValue.style === 'leica'">SONY ILCE-6700</template>
+            <template v-else-if="modelValue.style === 'cinema'">50mm f/1.8  1/250s ISO 400</template>
+            <template v-else>SONY ILCE-6700</template>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.preview-box {
-  margin-top: 16px;
+.photo-info-group {
+  h3 {
+    &::before {
+      content: '📷';
+      width: auto;
+      height: auto;
+      background: none;
+      border-radius: 0;
+    }
+  }
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.form-label {
+  min-width: 42px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.toggle-switch {
+  width: 44px;
+  height: 24px;
   background: var(--color-card-dark);
-  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+}
+
+.toggle-knob {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .toggle-switch.active & {
+    transform: translateX(20px);
+  }
+}
+
+.style-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.style-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--color-card-dark);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: rgba(0, 212, 255, 0.08);
+  }
+
+  span {
+    font-size: 13px;
+    color: var(--color-text);
+  }
+}
+
+.style-dot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  transition: all 0.2s;
+  flex-shrink: 0;
+
+  .style-item.selected & {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    box-shadow: inset 0 0 0 3px var(--color-card-dark);
+  }
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input {
+    width: 64px;
+    padding: 6px 10px;
+    font-size: 13px;
+    background: var(--color-card-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    text-align: center;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+  }
+
+  .unit {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+}
+
+.preview-section {
+  margin-top: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
-.preview-label {
+.preview-header {
   padding: 8px 12px;
   font-size: 11px;
   font-weight: 600;
@@ -86,26 +249,19 @@ function updateBgColor(e: Event) {
   border-bottom: 1px solid var(--color-border);
 }
 
-.preview-content {
+.preview-area {
   padding: 12px;
-}
-
-.preview-image-placeholder {
-  height: 60px;
-  background: #333;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  background: var(--color-card-dark);
 }
 
 .preview-text {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
   font-size: 10px;
-  padding: 8px 16px;
-  width: 100%;
-  text-align: center;
-  font-family: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-family: sans-serif;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;

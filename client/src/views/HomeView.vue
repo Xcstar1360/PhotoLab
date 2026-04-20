@@ -8,7 +8,7 @@ import PhotoInfoPanel from '../components/PhotoInfoPanel.vue'
 import ExifInfo from '../components/ExifInfo.vue'
 import ActionButtons from '../components/ActionButtons.vue'
 import { usePhotoApi } from '../composables/usePhotoApi'
-import type { WatermarkOptions, BorderOptions, PhotoInfoOptions, ExifData } from '@photolab/shared/types'
+import type { WatermarkOptions, BorderOptions, CaptureOptions, ExifData } from '@photolab/shared/types'
 
 const { uploadPhoto, processPhoto, downloadResult } = usePhotoApi()
 
@@ -54,9 +54,9 @@ const border = ref<BorderOptions>({
   blurRadius: 20
 })
 
-const photoInfo = ref<PhotoInfoOptions>({
+const capture = ref<CaptureOptions>({
   enabled: false,
-  style: 'bottom-bar',
+  style: 'classic',
   height: 80,
   textColor: '#333333',
   bgColor: '#FFFFFF'
@@ -89,7 +89,7 @@ async function handleProcess() {
 
   isProcessing.value = true
   try {
-    const result = await processPhoto(uploadedFile.value, watermark.value, border.value, photoInfo.value)
+    const result = await processPhoto(uploadedFile.value, watermark.value, border.value, capture.value)
     console.log('handleProcess: result', result)
     if (result.success && result.outputPath) {
       processedUrl.value = result.outputPath
@@ -136,7 +136,7 @@ function handleDownload() {
         <div class="panel-content">
           <WatermarkPanel v-model="watermark" />
           <BorderPanel v-model="border" />
-          <PhotoInfoPanel v-model="photoInfo" />
+          <PhotoInfoPanel v-model="capture" />
         </div>
         <div class="panel-footer">
           <ActionButtons :is-processing="isProcessing" :show-download="showDownload" @process="handleProcess" @download="handleDownload" />

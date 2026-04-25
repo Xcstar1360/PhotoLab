@@ -32,7 +32,7 @@ export class ImageService {
       );
     }
 
-    if (options.watermark && options.watermark.text) {
+    if (options.watermark && options.watermark.enabled) {
       image = await watermarkService.applyWatermark(
         image,
         width,

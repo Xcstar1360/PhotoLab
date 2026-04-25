@@ -38,12 +38,70 @@ const exif = ref<ExifData | null>(null)
 const isProcessing = ref(false)
 const showDownload = ref(false)
 
+// 获取预览区图片的显示宽度
+function getPreviewImageDisplayWidth(): number {
+  const imgEl = document.querySelector('.preview-image-wrap img') as HTMLImageElement
+  if (imgEl) {
+    return imgEl.getBoundingClientRect().width
+  }
+  return 0
+}
+
+// 获取预览区图片的原图宽度
+function getPreviewImageNaturalWidth(): number {
+  const imgEl = document.querySelector('.preview-image-wrap img') as HTMLImageElement
+  if (imgEl) {
+    return imgEl.naturalWidth
+  }
+  return 0
+}
+
+// 转换 watermark 选项，将预览区字体大小转换为原图尺寸的等效值
+function convertWatermarkForBackend(wm: WatermarkOptions): WatermarkOptions {
+  if (!wm.enabled) return wm
+
+  const displayWidth = getPreviewImageDisplayWidth()
+  const naturalWidth = getPreviewImageNaturalWidth()
+  if (displayWidth <= 0 || naturalWidth <= 0) return wm
+
+  const scaleRatio = naturalWidth / displayWidth
+  if (scaleRatio === 1) return wm
+
+  if (wm.type === 'text' && wm.textOptions) {
+    return {
+      ...wm,
+      textOptions: {
+        ...wm.textOptions,
+        fontSize: Math.round((wm.textOptions.fontSize || 24) * scaleRatio)
+      }
+    }
+  }
+
+  if (wm.type === 'logo' && wm.logoOptions) {
+    return {
+      ...wm,
+      logoOptions: {
+        ...wm.logoOptions,
+        width: Math.round((wm.logoOptions.width || 100) * scaleRatio)
+      }
+    }
+  }
+
+  return wm
+}
+
 const watermark = ref<WatermarkOptions>({
-  text: 'PhotoLab',
-  position: 'bottom-right',
-  fontSize: 24,
-  color: '#ffffff',
-  opacity: 0.8
+  enabled: false,
+  type: 'text',
+  positionMode: 'preset',
+  presetPosition: 'bottom-right',
+  freePosition: { xPercent: 90, yPercent: 90 },
+  textOptions: {
+    text: 'PhotoLab',
+    fontSize: 24,
+    color: '#ffffff',
+    opacity: 0.8
+  }
 })
 
 const border = ref<BorderOptions>({
@@ -89,11 +147,12 @@ async function handleProcess() {
 
   isProcessing.value = true
   try {
+    const watermarkForBackend = convertWatermarkForBackend(watermark.value)
     let result
     if (originalUrl.value) {
-      result = await processExistingPhoto(originalUrl.value, watermark.value, border.value, capture.value)
+      result = await processExistingPhoto(originalUrl.value, watermarkForBackend, border.value, capture.value)
     } else {
-      result = await processPhoto(uploadedFile.value, watermark.value, border.value, capture.value)
+      result = await processPhoto(uploadedFile.value, watermarkForBackend, border.value, capture.value)
     }
     console.log('handleProcess: result', result)
     if (result.success && result.outputPath) {
@@ -117,6 +176,10 @@ function handleDownload() {
   if (processedUrl.value) {
     downloadResult(processedUrl.value)
   }
+}
+
+function handleWatermarkPositionChange(pos: { xPercent: number; yPercent: number }) {
+  watermark.value.freePosition = pos
 }
 </script>
 
@@ -155,7 +218,7 @@ function handleDownload() {
         </div>
         <div class="panel-content">
           <DropZone v-if="!originalUrl" @file-selected="handleFileSelected" />
-          <ImagePreview v-else :original-url="originalUrl" :processed-url="processedUrl" @file-selected="handleFileSelected" />
+          <ImagePreview v-else :original-url="originalUrl" :processed-url="processedUrl" :watermark-options="watermark" @file-selected="handleFileSelected" @watermark-position-change="handleWatermarkPositionChange" />
         </div>
       </section>
 

@@ -1,12 +1,55 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import WatermarkOverlay from './WatermarkOverlay.vue'
+import type { WatermarkOptions, WatermarkFreePosition } from '@photolab/shared/types'
+
 const emit = defineEmits<{
   fileSelected: [file: File]
+  watermarkPositionChange: [position: WatermarkFreePosition]
 }>()
 
-defineProps<{
+const props = defineProps<{
   originalUrl: string
   processedUrl: string
+  watermarkOptions?: WatermarkOptions
 }>()
+
+const containerWidth = ref(0)
+const containerHeight = ref(0)
+const imageWidth = ref(0)
+const imageHeight = ref(0)
+const originalImgRef = ref<HTMLImageElement | null>(null)
+
+function updateDimensions() {
+  const el = document.querySelector('.preview-image-wrap') as HTMLElement
+  if (el) {
+    containerWidth.value = el.clientWidth
+    containerHeight.value = el.clientHeight
+  }
+  if (originalImgRef.value) {
+    imageWidth.value = originalImgRef.value.naturalWidth
+    imageHeight.value = originalImgRef.value.naturalHeight
+  }
+}
+
+let resizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  updateDimensions()
+  resizeObserver = new ResizeObserver(updateDimensions)
+  const el = document.querySelector('.preview-image-wrap')
+  if (el) {
+    resizeObserver.observe(el)
+  }
+})
+
+onUnmounted(() => {
+  resizeObserver?.disconnect()
+})
+
+function handleWatermarkPositionChange(pos: WatermarkFreePosition) {
+  emit('watermarkPositionChange', pos)
+}
 </script>
 
 <template>
@@ -14,8 +57,17 @@ defineProps<{
     <div class="preview-container">
       <div class="preview-box">
         <div class="preview-label">原图</div>
-        <div class="preview-image-wrap">
-          <img :src="originalUrl" alt="Original">
+        <div class="preview-image-wrap" ref="imageWrap">
+          <img ref="originalImgRef" :src="originalUrl" alt="Original" @load="updateDimensions">
+          <WatermarkOverlay
+            v-if="watermarkOptions?.enabled"
+            :options="watermarkOptions"
+            :container-width="containerWidth"
+            :container-height="containerHeight"
+            :image-width="imageWidth"
+            :image-height="imageHeight"
+            @update:position="handleWatermarkPositionChange"
+          />
         </div>
       </div>
       <div class="preview-box" v-if="processedUrl">
@@ -79,6 +131,7 @@ defineProps<{
   justify-content: center;
   background: rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  position: relative;
 
   img {
     max-width: 100%;

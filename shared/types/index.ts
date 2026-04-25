@@ -23,12 +23,51 @@ export interface ExifData {
   orientation?: number;
 }
 
-export interface WatermarkOptions {
+export interface WatermarkShadow {
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  color: string;
+}
+
+export interface WatermarkTextOptions {
   text: string;
-  position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'center';
   fontSize?: number;
   color?: string;
   opacity?: number;
+  rotation?: number;
+  shadow?: WatermarkShadow;
+}
+
+export interface WatermarkLogoOptions {
+  logoUrl: string;
+  width?: number;
+  opacity?: number;
+  rotation?: number;
+  shadow?: WatermarkShadow;
+}
+
+export interface WatermarkFreePosition {
+  xPercent: number;
+  yPercent: number;
+}
+
+export type WatermarkPresetPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'center';
+
+export interface WatermarkOptions {
+  enabled: boolean;
+  type: 'text' | 'logo';
+  positionMode: 'preset' | 'free';
+  presetPosition?: WatermarkPresetPosition;
+  freePosition?: WatermarkFreePosition;
+  textOptions?: WatermarkTextOptions;
+  logoOptions?: WatermarkLogoOptions;
+}
+
+export interface WatermarkPresetTemplate {
+  id: string;
+  name: string;
+  text: string;
 }
 
 export interface BorderOptions {

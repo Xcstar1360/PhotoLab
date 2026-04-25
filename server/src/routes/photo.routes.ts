@@ -58,6 +58,23 @@ router.post('/upload', upload.single('image'), async (req: MulterRequest, res: R
   }
 });
 
+router.post('/upload-logo', upload.single('logo'), async (req: MulterRequest, res: Response) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'No file uploaded' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      logoPath: `/uploads/${req.file.filename}`
+    });
+  } catch (error) {
+    console.error('Logo upload error:', error);
+    res.status(500).json({ error: 'Logo upload failed' });
+  }
+});
+
 router.post('/process', upload.single('image'), async (req: MulterRequest, res: Response) => {
   try {
     if (!req.file) {

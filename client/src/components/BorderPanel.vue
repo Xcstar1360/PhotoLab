@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import ColorPicker from './ColorPicker.vue'
 import type { BorderOptions } from '@photolab/shared/types'
 
 const props = defineProps<{
@@ -12,6 +13,10 @@ const emit = defineEmits<{
 
 const showColorBar = ref(props.modelValue.type === 'color-bar')
 const blurRadius = ref(props.modelValue.blurRadius ?? 20)
+
+const blurProgress = computed(() => {
+  return `${((blurRadius.value - 5) / (50 - 5)) * 100}%`
+})
 
 watch(() => props.modelValue.type, (type) => {
   showColorBar.value = type === 'color-bar'
@@ -29,34 +34,66 @@ function handleTypeChange(e: Event) {
 </script>
 
 <template>
-  <div class="option-group">
+  <div class="option-group border-panel">
     <h3>边框设置</h3>
-    <div class="option-row">
-      <label>边框类型</label>
+    <div class="form-row">
+      <span class="form-label">类型</span>
       <select :value="modelValue.type" @change="handleTypeChange">
         <option value="color-bar">纯色边框</option>
         <option value="blur">模糊边框</option>
       </select>
     </div>
-    <div class="option-row" v-if="showColorBar">
-      <label>边框颜色</label>
-      <input type="color" :value="modelValue.color" @input="emit('update:modelValue', { ...modelValue, color: ($event.target as HTMLInputElement).value })">
-      <label style="margin-left: 20px;">
-        <input type="checkbox" :checked="modelValue.dominantColor" @change="emit('update:modelValue', { ...modelValue, dominantColor: ($event.target as HTMLInputElement).checked })"> 使用主色调
+    <div class="form-row color-row" v-if="showColorBar">
+      <span class="form-label">颜色</span>
+      <ColorPicker :model-value="modelValue.color || '#1a1a1a'" @update:model-value="(v) => emit('update:modelValue', { ...modelValue, color: v })" />
+      <label class="checkbox-label">
+        <input type="checkbox" :checked="modelValue.dominantColor" @change="emit('update:modelValue', { ...modelValue, dominantColor: ($event.target as HTMLInputElement).checked })">
+        <span>自动</span>
       </label>
     </div>
-    <div class="option-row">
-      <label>边框宽度</label>
+    <div class="form-row">
+      <span class="form-label">宽度</span>
       <input type="number" :value="modelValue.barWidth" @input="emit('update:modelValue', { ...modelValue, barWidth: parseInt(($event.target as HTMLInputElement).value) })" min="20" max="200">
     </div>
-    <div class="option-row" v-if="!showColorBar">
-      <label>模糊程度</label>
-      <input type="range" v-model="blurRadius" min="5" max="50">
-      <span>{{ blurRadius }}</span>
+    <div class="form-row" v-if="!showColorBar">
+      <span class="form-label">模糊</span>
+      <div class="slider-container">
+        <input type="range" v-model="blurRadius" min="5" max="50" :style="{ '--range-progress': blurProgress }">
+        <span class="slider-value">{{ blurRadius }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Component-specific styles - shared styles in main.css */
+.border-panel {
+  .color-row {
+    flex-wrap: wrap;
+  }
+
+  .checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .slider-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .slider-value {
+    min-width: 36px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text);
+    font-weight: 500;
+  }
+}
 </style>

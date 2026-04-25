@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ColorPicker from './ColorPicker.vue'
 import type { CaptureOptions } from '@photolab/shared/types'
 
 const props = defineProps<{
@@ -61,7 +62,7 @@ const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
             @click="selectStyle(opt.value)"
           >
             <span class="style-dot"></span>
-            <span>{{ opt.label }}</span>
+            <span class="style-name">{{ opt.label }}</span>
           </button>
         </div>
       </div>
@@ -76,12 +77,12 @@ const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
 
       <div class="form-row">
         <span class="form-label">文字</span>
-        <input type="color" :value="modelValue.textColor || '#333333'" @input="updateTextColor">
+        <ColorPicker :model-value="modelValue.textColor || '#333333'" @update:model-value="(v) => emit('update:modelValue', { ...modelValue, textColor: v })" />
       </div>
 
       <div class="form-row">
         <span class="form-label">背景</span>
-        <input type="color" :value="modelValue.bgColor || '#FFFFFF'" @input="updateBgColor">
+        <ColorPicker :model-value="modelValue.bgColor || '#FFFFFF'" @update:model-value="(v) => emit('update:modelValue', { ...modelValue, bgColor: v })" />
       </div>
 
       <div class="preview-section">
@@ -100,61 +101,6 @@ const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
 </template>
 
 <style lang="scss" scoped>
-.photo-info-group {
-  h3 {
-    &::before {
-      content: '📷';
-      width: auto;
-      height: auto;
-      background: none;
-      border-radius: 0;
-    }
-  }
-}
-
-.form-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.form-label {
-  min-width: 42px;
-  font-size: 13px;
-  color: var(--color-text-muted);
-}
-
-.toggle-switch {
-  width: 44px;
-  height: 24px;
-  background: var(--color-card-dark);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 2px;
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &.active {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-  }
-}
-
-.toggle-knob {
-  display: block;
-  width: 18px;
-  height: 18px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-  .toggle-switch.active & {
-    transform: translateX(20px);
-  }
-}
-
 .style-list {
   display: flex;
   flex-direction: column;
@@ -182,11 +128,11 @@ const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
     border-color: var(--color-primary);
     background: rgba(0, 212, 255, 0.08);
   }
+}
 
-  span {
-    font-size: 13px;
-    color: var(--color-text);
-  }
+.style-name {
+  font-size: 13px;
+  color: var(--color-text);
 }
 
 .style-dot {

@@ -57,17 +57,11 @@ export class ImageService {
       success: true,
       outputPath: `/uploads/${path.basename(outputPath)}`,
       exif: {
+        ...exif,
         imageWidth: metadata.width,
         imageHeight: metadata.height,
       },
     };
-    if (exif) {
-      result.exif = {
-        ...exif,
-        imageWidth: metadata.width,
-        imageHeight: metadata.height,
-      };
-    }
 
     return result;
   }
@@ -77,7 +71,7 @@ export class ImageService {
     options: ProcessingOptions,
   ): Promise<ProcessingResult> {
     try {
-      const fileName = `processed_${Date.now()}.jpg`;
+      const fileName = `processed_${crypto.randomUUID()}.jpg`;
       const outputPath = path.join(this.outputDir, fileName);
       const image = sharp(inputPath);
 
@@ -96,7 +90,7 @@ export class ImageService {
     options: ProcessingOptions,
   ): Promise<ProcessingResult> {
     try {
-      const hash = this.generateParamsHash(inputPath);
+      const hash = this.generateParamsHash(inputPath, options);
       const fileName = `processed_${hash}.jpg`;
       const outputPath = path.join(this.outputDir, fileName);
       const image = sharp(inputPath);
@@ -111,8 +105,9 @@ export class ImageService {
     }
   }
 
-  private generateParamsHash(inputPath: string): string {
-    return crypto.createHash("md5").update(inputPath).digest("hex").substring(0, 12);
+  private generateParamsHash(inputPath: string, options: ProcessingOptions): string {
+    const payload = JSON.stringify({ inputPath, options });
+    return crypto.createHash("md5").update(payload).digest("hex").substring(0, 12);
   }
 
   async extractDominantColor(imagePath: string): Promise<string> {

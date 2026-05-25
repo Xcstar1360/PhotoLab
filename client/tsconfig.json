@@ -9,6 +9,7 @@
     "types": ["vite/client"],
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "paths": {
+      "@/*": ["./src/*"],
       "@photolab/shared": ["../shared/types/index.ts"],
       "@photolab/shared/*": ["../shared/types/*"]
     }

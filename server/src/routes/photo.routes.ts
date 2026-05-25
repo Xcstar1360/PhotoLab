@@ -4,6 +4,7 @@ import path from 'path';
 import { imageService } from '../services/image.service';
 import { exifService } from '../services/exif.service';
 import { ProcessingOptions } from '@photolab/shared/types';
+import { resolveUploadPath } from '../utils/safePath';
 
 const router = Router();
 
@@ -109,8 +110,7 @@ router.post('/process-existing', async (req: Request, res: Response) => {
       return;
     }
 
-    // Convert URL path (/uploads/xxx.jpg) to filesystem path
-    const filePath = path.join(process.cwd(), originalPath);
+    const filePath = resolveUploadPath(originalPath);
 
     const options: ProcessingOptions = {
       watermark: req.body.watermark || undefined,
@@ -134,7 +134,7 @@ router.post('/process-existing', async (req: Request, res: Response) => {
 router.get('/exif/:filename', async (req: Request, res: Response) => {
   try {
     const filename = req.params.filename as string;
-    const filePath = path.join(process.cwd(), 'uploads', filename);
+    const filePath = resolveUploadPath(filename);
     const exif = await exifService.extractExif(filePath);
     res.json(exif);
   } catch (error) {
@@ -146,7 +146,7 @@ router.get('/exif/:filename', async (req: Request, res: Response) => {
 router.get('/color/:filename', async (req: Request, res: Response) => {
   try {
     const filename = req.params.filename as string;
-    const filePath = path.join(process.cwd(), 'uploads', filename);
+    const filePath = resolveUploadPath(filename);
     const color = await imageService.extractDominantColor(filePath);
     res.json({ dominantColor: color });
   } catch (error) {

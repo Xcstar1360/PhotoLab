@@ -214,16 +214,17 @@ const logoRotationProgress = computed(() => {
 
       <template v-if="localOptions.type === 'text'">
         <div class="form-row">
-          <span class="form-label">模板</span>
-          <select v-model="selectedTemplateId" @change="handleTemplateChange">
+          <label class="form-label" for="wm-template">模板</label>
+          <select id="wm-template" v-model="selectedTemplateId" @change="handleTemplateChange">
             <option value="">自定义</option>
             <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
           </select>
         </div>
 
         <div class="option-row">
-          <label>水印文字</label>
+          <label for="wm-text">水印文字</label>
           <input
+            id="wm-text"
             type="text"
             :value="textOptions.text"
             @input="textOptions.text = ($event.target as HTMLInputElement).value"
@@ -240,8 +241,9 @@ const logoRotationProgress = computed(() => {
         </div>
 
         <div class="option-row">
-          <label>字体大小</label>
+          <label for="wm-fontSize">字体大小</label>
           <input
+            id="wm-fontSize"
             type="number"
             :value="textOptions.fontSize"
             @input="textOptions.fontSize = parseInt(($event.target as HTMLInputElement).value)"
@@ -251,14 +253,15 @@ const logoRotationProgress = computed(() => {
         </div>
 
         <div class="form-row">
-          <span class="form-label">颜色</span>
+          <label class="form-label">颜色</label>
           <ColorPicker v-model="textColor" />
         </div>
 
         <div class="form-row">
-          <span class="form-label">透明度</span>
+          <label class="form-label" for="wm-opacity">透明度</label>
           <div class="slider-container">
             <input
+              id="wm-opacity"
               type="range"
               :value="textOptions.opacity ?? 0.8"
               @input="textOptions.opacity = parseFloat(($event.target as HTMLInputElement).value)"
@@ -272,9 +275,10 @@ const logoRotationProgress = computed(() => {
         </div>
 
         <div class="form-row">
-          <span class="form-label">旋转</span>
+          <label class="form-label" for="wm-rotation">旋转</label>
           <div class="slider-container">
             <input
+              id="wm-rotation"
               type="range"
               :value="textOptions.rotation ?? 0"
               @input="textOptions.rotation = parseInt(($event.target as HTMLInputElement).value)"
@@ -346,8 +350,9 @@ const logoRotationProgress = computed(() => {
         </div>
 
         <div class="option-row">
-          <label>宽度 (px)</label>
+          <label for="wm-logoWidth">宽度 (px)</label>
           <input
+            id="wm-logoWidth"
             type="number"
             :value="logoOptions.width ?? 100"
             @input="logoOptions.width = parseInt(($event.target as HTMLInputElement).value)"
@@ -357,9 +362,10 @@ const logoRotationProgress = computed(() => {
         </div>
 
         <div class="form-row">
-          <span class="form-label">透明度</span>
+          <label class="form-label" for="wm-logoOpacity">透明度</label>
           <div class="slider-container">
             <input
+              id="wm-logoOpacity"
               type="range"
               :value="logoOptions.opacity ?? 0.8"
               @input="logoOptions.opacity = parseFloat(($event.target as HTMLInputElement).value)"
@@ -373,9 +379,10 @@ const logoRotationProgress = computed(() => {
         </div>
 
         <div class="form-row">
-          <span class="form-label">旋转</span>
+          <label class="form-label" for="wm-logoRotation">旋转</label>
           <div class="slider-container">
             <input
+              id="wm-logoRotation"
               type="range"
               :value="logoOptions.rotation ?? 0"
               @input="logoOptions.rotation = parseInt(($event.target as HTMLInputElement).value)"

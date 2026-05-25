@@ -1,5 +1,6 @@
 import sharp from "sharp";
 import { CaptureOptions, ExifData } from "@photolab/shared/types";
+import { escapeXml } from "../../utils/svg";
 
 export class CaptureService {
   async applyCapture(
@@ -120,10 +121,10 @@ export class CaptureService {
             font-weight: 400;
           }
         </style>
-        <text class="camera-text-shadow" x="22" y="${barHeight - 14}" opacity="0.3">${this.escapeXml(cameraText)}</text>
-        <text class="camera-text" x="20" y="${barHeight - 16}">${this.escapeXml(cameraText)}</text>
-        <text class="settings-text-shadow" x="${refWidth - 18}" y="${barHeight - 14}" text-anchor="end" opacity="0.3">${this.escapeXml(settingsText)}</text>
-        <text class="settings-text" x="${refWidth - 20}" y="${barHeight - 16}" text-anchor="end">${this.escapeXml(settingsText)}</text>
+        <text class="camera-text-shadow" x="22" y="${barHeight - 14}" opacity="0.3">${escapeXml(cameraText)}</text>
+        <text class="camera-text" x="20" y="${barHeight - 16}">${escapeXml(cameraText)}</text>
+        <text class="settings-text-shadow" x="${refWidth - 18}" y="${barHeight - 14}" text-anchor="end" opacity="0.3">${escapeXml(settingsText)}</text>
+        <text class="settings-text" x="${refWidth - 20}" y="${barHeight - 16}" text-anchor="end">${escapeXml(settingsText)}</text>
       </svg>
     `;
   }
@@ -144,7 +145,7 @@ export class CaptureService {
             letter-spacing: 1px;
           }
         </style>
-        <text class="leica-text" x="20" y="${barHeight - 18}">${this.escapeXml(cameraText)}</text>
+        <text class="leica-text" x="20" y="${barHeight - 18}">${escapeXml(cameraText)}</text>
       </svg>
     `;
   }
@@ -167,8 +168,8 @@ export class CaptureService {
             font-weight: 400;
           }
         </style>
-        <text class="cinema-text" x="30" y="${midY + 6}">${this.escapeXml(settingsText)}</text>
-        <text class="cinema-text" x="${refWidth - 30}" y="${midY + 6}" text-anchor="end">${this.escapeXml(cameraText)}</text>
+        <text class="cinema-text" x="30" y="${midY + 6}">${escapeXml(settingsText)}</text>
+        <text class="cinema-text" x="${refWidth - 30}" y="${midY + 6}" text-anchor="end">${escapeXml(cameraText)}</text>
       </svg>
     `;
   }
@@ -197,21 +198,12 @@ export class CaptureService {
             font-family: "Courier New", monospace;
           }
         </style>
-        <text class="polaroid-camera" x="${refWidth / 2}" y="${barHeight / 2 + 6}" text-anchor="middle">${this.escapeXml(cameraText)}</text>
-        <text class="polaroid-date" x="${refWidth / 2}" y="${barHeight / 2 + 32}" text-anchor="middle">${this.escapeXml(settingsText)}</text>
+        <text class="polaroid-camera" x="${refWidth / 2}" y="${barHeight / 2 + 6}" text-anchor="middle">${escapeXml(cameraText)}</text>
+        <text class="polaroid-date" x="${refWidth / 2}" y="${barHeight / 2 + 32}" text-anchor="middle">${escapeXml(settingsText)}</text>
       </svg>
     `;
   }
 
-  private escapeXml(text: string): string {
-    if (!text) return "";
-    return String(text)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
-  }
 }
 
 export const captureService = new CaptureService();

@@ -44,21 +44,23 @@ const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
     <h3>拍摄参数</h3>
 
     <div class="form-row">
-      <span class="form-label">启用</span>
-      <button class="toggle-switch" :class="{ active: modelValue.enabled }" @click="toggleEnabled">
+      <label class="form-label">启用</label>
+      <button class="toggle-switch" :class="{ active: modelValue.enabled }" @click="toggleEnabled" :aria-pressed="modelValue.enabled">
         <span class="toggle-knob"></span>
       </button>
     </div>
 
     <template v-if="modelValue.enabled">
       <div class="form-row">
-        <span class="form-label">风格</span>
-        <div class="style-list">
+        <label class="form-label">风格</label>
+        <div class="style-list" role="radiogroup" aria-label="拍摄参数风格">
           <button
             v-for="opt in styleOptions"
             :key="opt.value"
             class="style-item"
             :class="{ selected: modelValue.style === opt.value }"
+            role="radio"
+            :aria-checked="modelValue.style === opt.value"
             @click="selectStyle(opt.value)"
           >
             <span class="style-dot"></span>
@@ -68,20 +70,20 @@ const styleOptions: { value: CaptureOptions['style']; label: string }[] = [
       </div>
 
       <div class="form-row">
-        <span class="form-label">高度</span>
+        <label class="form-label" for="capture-height">高度</label>
         <div class="input-group">
-          <input type="number" :value="modelValue.height || 80" @input="updateHeight" min="40" max="200">
+          <input id="capture-height" type="number" :value="modelValue.height || 80" @input="updateHeight" min="40" max="200">
           <span class="unit">px</span>
         </div>
       </div>
 
       <div class="form-row">
-        <span class="form-label">文字</span>
+        <label class="form-label">文字</label>
         <ColorPicker :model-value="modelValue.textColor || '#333333'" @update:model-value="(v) => emit('update:modelValue', { ...modelValue, textColor: v })" />
       </div>
 
       <div class="form-row">
-        <span class="form-label">背景</span>
+        <label class="form-label">背景</label>
         <ColorPicker :model-value="modelValue.bgColor || '#FFFFFF'" @update:model-value="(v) => emit('update:modelValue', { ...modelValue, bgColor: v })" />
       </div>
 

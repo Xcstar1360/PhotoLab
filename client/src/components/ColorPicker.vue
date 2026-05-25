@@ -26,7 +26,15 @@ const displayColor = computed(() => {
 </script>
 
 <template>
-  <div class="color-picker" @click="openPicker">
+  <div
+    class="color-picker"
+    role="button"
+    tabindex="0"
+    :aria-label="`选择颜色 ${displayColor}`"
+    @click="openPicker"
+    @keydown.enter.prevent="openPicker"
+    @keydown.space.prevent="openPicker"
+  >
     <div class="color-preview" :style="{ backgroundColor: displayColor }"></div>
     <input
       ref="inputRef"

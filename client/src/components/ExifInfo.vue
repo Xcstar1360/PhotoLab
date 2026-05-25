@@ -1,21 +1,25 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { ExifData } from '@photolab/shared/types'
 
-defineProps<{
+const props = defineProps<{
   exif: ExifData | null
 }>()
 
-function formatExif(exif: ExifData): Array<{ label: string; value: string }> {
+const formattedExif = computed(() => {
+  const exif = props.exif
   const items: Array<{ label: string; value: string }> = []
 
-  if (exif?.camera) {
+  if (!exif) return items
+
+  if (exif.camera) {
     items.push({ label: '相机', value: `${exif.camera.make || ''} ${exif.camera.model || ''}` })
     if (exif.camera.lens) {
       items.push({ label: '镜头', value: exif.camera.lens })
     }
   }
 
-  if (exif?.settings) {
+  if (exif.settings) {
     const s = exif.settings
     const parts: string[] = []
     if (s.iso) parts.push(`ISO ${s.iso}`)
@@ -30,27 +34,27 @@ function formatExif(exif: ExifData): Array<{ label: string; value: string }> {
     }
   }
 
-  if (exif?.timestamp) {
+  if (exif.timestamp) {
     items.push({ label: '拍摄时间', value: new Date(exif.timestamp).toLocaleString() })
   }
 
-  if (exif?.gps?.latitude && exif?.gps?.longitude) {
+  if (exif.gps?.latitude && exif.gps?.longitude) {
     items.push({ label: 'GPS', value: `${exif.gps.latitude.toFixed(4)}, ${exif.gps.longitude.toFixed(4)}` })
   }
 
-  items.push({ label: '尺寸', value: `${exif?.imageWidth || '?'} × ${exif?.imageHeight || '?'}` })
+  items.push({ label: '尺寸', value: `${exif.imageWidth || '?'} × ${exif.imageHeight || '?'}` })
 
   return items
-}
+})
 </script>
 
 <template>
-  <div class="exif-info" v-if="exif">
-    <template v-for="item in formatExif(exif)" :key="item.label">
+  <dl class="exif-info" v-if="exif">
+    <template v-for="item in formattedExif" :key="item.label">
       <dt>{{ item.label }}</dt>
       <dd>{{ item.value }}</dd>
     </template>
-  </div>
+  </dl>
 </template>
 
 <style lang="scss" scoped>

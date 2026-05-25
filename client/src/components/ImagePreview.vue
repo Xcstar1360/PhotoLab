@@ -4,7 +4,7 @@ import WatermarkOverlay from './WatermarkOverlay.vue'
 import type { WatermarkOptions, WatermarkFreePosition } from '@photolab/shared/types'
 
 const emit = defineEmits<{
-  fileSelected: [file: File]
+  fileSelected: [file: File | null]
   watermarkPositionChange: [position: WatermarkFreePosition]
 }>()
 
@@ -77,7 +77,7 @@ function handleWatermarkPositionChange(pos: WatermarkFreePosition) {
         </div>
       </div>
     </div>
-    <button class="btn-change" @click="emit('fileSelected', null as any)">更换图片</button>
+    <button class="btn-change" @click="emit('fileSelected', null)">更换图片</button>
   </div>
 </template>
 

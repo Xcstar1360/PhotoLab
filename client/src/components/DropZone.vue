@@ -40,7 +40,19 @@ function handleFileChange(e: Event) {
 </script>
 
 <template>
-  <div class="drop-zone" ref="dropZone" @click="handleClick" @dragover="handleDragOver" @dragleave="handleDragLeave" @drop="handleDrop">
+  <div
+    class="drop-zone"
+    ref="dropZone"
+    role="button"
+    tabindex="0"
+    aria-label="选择图片文件"
+    @click="handleClick"
+    @keydown.enter.prevent="handleClick"
+    @keydown.space.prevent="handleClick"
+    @dragover="handleDragOver"
+    @dragleave="handleDragLeave"
+    @drop="handleDrop"
+  >
     <p>拖拽照片到这里，或点击选择文件</p>
     <input type="file" accept="image/*" @change="handleFileChange" ref="fileInput">
   </div>

@@ -1,11 +1,12 @@
 {
   "name": "@photolab/server",
   "version": "1.0.0",
+  "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "tsx dist/index.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

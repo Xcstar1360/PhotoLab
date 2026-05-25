@@ -1,11 +1,12 @@
 import sharp from "sharp";
-import path from "path";
 import {
   WatermarkOptions,
   WatermarkFreePosition,
   WatermarkTextOptions,
   WatermarkLogoOptions,
 } from "@photolab/shared/types";
+import { resolveUploadPath } from "../../utils/safePath";
+import { escapeXml } from "../../utils/svg";
 
 export class WatermarkService {
   async applyWatermark(
@@ -77,7 +78,7 @@ export class WatermarkService {
       return image;
     }
 
-    const logoPath = path.join(process.cwd(), opts.logoUrl.replace(/^\//, ''));
+    const logoPath = resolveUploadPath(opts.logoUrl);
     const logoWidth = opts.width || 100;
     const opacity = opts.opacity ?? 0.8;
     const rotation = opts.rotation || 0;
@@ -90,21 +91,16 @@ export class WatermarkService {
       .toBuffer();
 
     if (opacity < 1) {
-      const metadata = await sharp(logoBuffer).metadata();
-      const logoHeight = metadata.height || logoWidth;
+      const { data, info } = await sharp(logoBuffer)
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
 
-      const overlayBuffer = await sharp({
-        create: {
-          width: metadata.width || logoWidth,
-          height: logoHeight,
-          channels: 4,
-          background: { r: 255, g: 255, b: 255, alpha: opacity }
-        }
-      }).toBuffer();
+      for (let i = 3; i < data.length; i += 4) {
+        data[i] = Math.round(data[i] * opacity);
+      }
 
-      logoBuffer = await sharp(logoBuffer)
-        .composite([{ input: overlayBuffer, blend: 'over' }])
-        .toBuffer();
+      logoBuffer = await sharp(data, { raw: info }).png().toBuffer();
     }
 
     const { x, y } = this.calculateLogoPosition(
@@ -156,7 +152,7 @@ export class WatermarkService {
           text-anchor="${textAnchor}"
           dominant-baseline="middle"
           ${transform}
-        >${this.escapeXml(text)}</text>
+        >${escapeXml(text)}</text>
       </svg>
     `;
   }
@@ -209,15 +205,6 @@ export class WatermarkService {
     return rgba;
   }
 
-  private escapeXml(text: string): string {
-    if (!text) return "";
-    return String(text)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&apos;");
-  }
 }
 
 export const watermarkService = new WatermarkService();

@@ -22,6 +22,10 @@ watch(() => props.modelValue.type, (type) => {
   showColorBar.value = type === 'color-bar'
 })
 
+watch(() => props.modelValue.blurRadius, (val) => {
+  if (val !== undefined) blurRadius.value = val
+})
+
 watch(blurRadius, (val) => {
   emit('update:modelValue', { ...props.modelValue, blurRadius: val })
 })
@@ -37,14 +41,14 @@ function handleTypeChange(e: Event) {
   <div class="option-group border-panel">
     <h3>边框设置</h3>
     <div class="form-row">
-      <span class="form-label">类型</span>
-      <select :value="modelValue.type" @change="handleTypeChange">
+      <label class="form-label" for="border-type">类型</label>
+      <select id="border-type" :value="modelValue.type" @change="handleTypeChange">
         <option value="color-bar">纯色边框</option>
         <option value="blur">模糊边框</option>
       </select>
     </div>
     <div class="form-row color-row" v-if="showColorBar">
-      <span class="form-label">颜色</span>
+      <label class="form-label">颜色</label>
       <ColorPicker :model-value="modelValue.color || '#1a1a1a'" @update:model-value="(v) => emit('update:modelValue', { ...modelValue, color: v })" />
       <label class="checkbox-label">
         <input type="checkbox" :checked="modelValue.dominantColor" @change="emit('update:modelValue', { ...modelValue, dominantColor: ($event.target as HTMLInputElement).checked })">
@@ -52,20 +56,20 @@ function handleTypeChange(e: Event) {
       </label>
     </div>
     <div class="form-row">
-      <span class="form-label">宽度</span>
-      <input type="number" :value="modelValue.barWidth" @input="emit('update:modelValue', { ...modelValue, barWidth: parseInt(($event.target as HTMLInputElement).value) })" min="20" max="200">
+      <label class="form-label" for="border-barWidth">宽度</label>
+      <input id="border-barWidth" type="number" :value="modelValue.barWidth" @input="emit('update:modelValue', { ...modelValue, barWidth: parseInt(($event.target as HTMLInputElement).value) })" min="20" max="200">
     </div>
     <div class="form-row" v-if="!showColorBar">
-      <span class="form-label">模糊</span>
+      <label class="form-label" for="border-blurRadius">模糊</label>
       <div class="slider-container">
-        <input type="range" v-model="blurRadius" min="5" max="50" :style="{ '--range-progress': blurProgress }">
+        <input id="border-blurRadius" type="range" v-model="blurRadius" min="5" max="50" :style="{ '--range-progress': blurProgress }">
         <span class="slider-value">{{ blurRadius }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .border-panel {
   .color-row {
     flex-wrap: wrap;

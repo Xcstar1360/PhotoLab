@@ -8,9 +8,11 @@ import PhotoInfoPanel from '../components/PhotoInfoPanel.vue'
 import ExifInfo from '../components/ExifInfo.vue'
 import ActionButtons from '../components/ActionButtons.vue'
 import { usePhotoApi } from '../composables/usePhotoApi'
+import { useToast } from '../composables/useToast'
 import type { WatermarkOptions, BorderOptions, CaptureOptions, ExifData } from '@photolab/shared/types'
 
 const { uploadPhoto, processPhoto, processExistingPhoto, downloadResult } = usePhotoApi()
+const toast = useToast()
 
 const isDark = ref(true)
 
@@ -120,7 +122,15 @@ const capture = ref<CaptureOptions>({
   bgColor: '#FFFFFF'
 })
 
-async function handleFileSelected(file: File) {
+async function handleFileSelected(file: File | null) {
+  if (!file) {
+    originalUrl.value = ''
+    processedUrl.value = ''
+    exif.value = null
+    uploadedFile.value = null
+    showDownload.value = false
+    return
+  }
   uploadedFile.value = file
   const result = await uploadPhoto(file)
   if (result.success) {
@@ -129,7 +139,7 @@ async function handleFileSelected(file: File) {
     processedUrl.value = ''
     showDownload.value = false
   } else {
-    alert('上传失败: ' + result.error)
+    toast.show('上传失败: ' + result.error)
   }
 }
 
@@ -162,11 +172,11 @@ async function handleProcess() {
         exif.value = result.exif
       }
     } else {
-      alert('处理失败: ' + result.error)
+      toast.show('处理失败: ' + result.error)
     }
   } catch (err) {
     console.error('handleProcess: error', err)
-    alert('处理失败: ' + (err as Error).message)
+    toast.show('处理失败: ' + (err as Error).message)
   } finally {
     isProcessing.value = false
   }

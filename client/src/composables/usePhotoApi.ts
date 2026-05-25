@@ -13,6 +13,9 @@ export function usePhotoApi() {
     formData.append('image', file)
 
     const res = await fetch('/api/photo/upload', { method: 'POST', body: formData })
+    if (!res.ok) {
+      return { success: false, filePath: '', error: `上传失败 (${res.status})` }
+    }
     const data: UploadResult = await res.json()
     return data
   }
@@ -33,9 +36,10 @@ export function usePhotoApi() {
     }
 
     const res = await fetch('/api/photo/process', { method: 'POST', body: formData })
-    console.log('processPhoto: response status', res.status)
+    if (!res.ok) {
+      return { success: false, outputPath: '', error: `处理失败 (${res.status})` }
+    }
     const data: ProcessingResult = await res.json()
-    console.log('processPhoto: response data', data)
     return data
   }
 
@@ -51,9 +55,10 @@ export function usePhotoApi() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ originalPath, watermark, border, capture })
     })
-    console.log('processExistingPhoto: response status', res.status)
+    if (!res.ok) {
+      return { success: false, outputPath: '', error: `处理失败 (${res.status})` }
+    }
     const data: ProcessingResult = await res.json()
-    console.log('processExistingPhoto: response data', data)
     return data
   }
 
